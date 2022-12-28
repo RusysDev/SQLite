@@ -19,9 +19,9 @@ jobs:
 #      - name: Install dependencies
 #        run: dotnet restore
       - name: Build
-        run: dotnet publish -c Release -o ../release --runtime linux-arm64 --self-contained true
+        run: dotnet publish -c Release -o /home/runner/work/SQLite/release --runtime linux-arm64 --self-contained true
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v2
         with:
           name: Application_Artifact
-          path: ../release/
+          path: /home/runner/work/SQLite/release
