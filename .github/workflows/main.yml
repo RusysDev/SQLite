@@ -22,3 +22,4 @@ jobs:
         with:
           name: Application_Artifact
           path: /home/runner/work/SQLite/release
+          retention-days: 5
