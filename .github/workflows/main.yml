@@ -16,7 +16,7 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
-      - name: Install dependencies
-        run: dotnet restore
+#      - name: Install dependencies
+#        run: dotnet restore
       - name: Build
         run: dotnet publish -c Release -o .\publish --runtime linux-arm64 --self-contained true
