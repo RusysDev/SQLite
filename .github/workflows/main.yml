@@ -21,7 +21,7 @@ jobs:
       - name: Build
         run: dotnet publish -c Release -o /home/runner/work/SQLite/release --runtime linux-arm64 --self-contained true
       - name: Upload Build Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Application_Artifact
           path: /home/runner/work/SQLite/release
