@@ -19,4 +19,4 @@ jobs:
       - name: Install dependencies
         run: dotnet restore
       - name: Build
-        run: dotnet publish -c Release -o ..\publish --runtime linux-arm64 --self-contained true
+        run: dotnet publish -c Release -o .\publish --runtime linux-arm64 --self-contained true
