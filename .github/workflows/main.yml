@@ -20,6 +20,6 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: SQLLite_${{github.run_number}}
+          name: SQLite_${{github.run_number}}
           path: /home/runner/work/SQLite/release
           retention-days: 5
