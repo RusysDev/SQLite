@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   build:
-    name: Build
+    name: Build Linux arm64
     runs-on: ubuntu-latest
 
     steps:
@@ -17,7 +17,7 @@ jobs:
 #        run: dotnet restore
       - name: Build
         run: dotnet publish -c Release -o /home/runner/work/SQLite/release --runtime linux-arm64 --self-contained false
-      - name: Upload Build Artifact
+      - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
           name: Application_Artifact
