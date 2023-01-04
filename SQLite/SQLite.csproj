@@ -12,7 +12,6 @@
 		<AssemblyVersion>1.0.1</AssemblyVersion>
 		<FileVersion>$(AssemblyVersion)</FileVersion>
 		<Version>$(AssemblyVersion)</Version>
-		<VersionSuffix></VersionSuffix>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'!='Release|AnyCPU'">
@@ -23,6 +22,7 @@
 		<DebugType>none</DebugType>
 		<GenerateDependencyFile>false</GenerateDependencyFile>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<VersionSuffix></VersionSuffix>
 	</PropertyGroup>
 
 	<ItemGroup>
