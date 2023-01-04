@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SqlUpdates>
+	<SqlUpdate Name="Base" Version="1">
+		<Query></Query>
+	</SqlUpdate>
+</SqlUpdates>

@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Executable", "Executable\Executable.csproj", "{64CE8320-3C23-4E66-9299-8F7D33F36BE8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLite", "SQLite\SQLite.csproj", "{4854B83F-8F9A-4713-A5CB-97FD1AF46057}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SQLite", "SQLite\SQLite.csproj", "{4854B83F-8F9A-4713-A5CB-97FD1AF46057}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,10 +11,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{64CE8320-3C23-4E66-9299-8F7D33F36BE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{64CE8320-3C23-4E66-9299-8F7D33F36BE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{64CE8320-3C23-4E66-9299-8F7D33F36BE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{64CE8320-3C23-4E66-9299-8F7D33F36BE8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4854B83F-8F9A-4713-A5CB-97FD1AF46057}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4854B83F-8F9A-4713-A5CB-97FD1AF46057}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4854B83F-8F9A-4713-A5CB-97FD1AF46057}.Release|Any CPU.ActiveCfg = Release|Any CPU
