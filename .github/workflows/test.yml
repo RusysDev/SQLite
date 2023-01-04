@@ -15,7 +15,7 @@ jobs:
       uses: kzrnm/get-net-sdk-project-versions-action@v1.3.0
       id: get-version
       with:
-          proj-path: YourProject/YourProject.csproj
+          proj-path: SQLite/SQLite.csproj
     - run: echo "${{steps.get-version.outputs.version}}"
     - run: echo "${{steps.get-version.outputs.version-prefix}}" 
     - run: echo "${{steps.get-version.outputs.version-suffix}}" 
@@ -23,6 +23,7 @@ jobs:
     - run: echo "${{steps.get-version.outputs.assembly-version}}" 
     - run: echo "${{steps.get-version.outputs.file-version}}" 
     - run: echo "${{steps.get-version.outputs.informational-version}}" 
+    
    #   with:
    #     node-version: 16
    #     fetch-depth: 0 #fetch-depth is needed for GitVersion
