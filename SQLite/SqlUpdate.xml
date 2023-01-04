@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SqlUpdate>
+	<Build Name="Base" Version="1">
+		<Query>
+			SELECT * FROM PRAGMA_TABLE_INFO('Config')
+		</Query>
+	</Build>
+</SqlUpdate>
