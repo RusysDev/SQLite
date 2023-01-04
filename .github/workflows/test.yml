@@ -10,7 +10,7 @@ jobs:
     name: Build package
     runs-on: ubuntu-latest
     steps:
-   # - uses: actions/checkout@v3
+    - uses: actions/checkout@v3
     - name: Get project version
       uses: kzrnm/get-net-sdk-project-versions-action@v1.1.2
       id: get-version
