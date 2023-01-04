@@ -9,18 +9,67 @@ jobs:
   build:
     name: Build Linux arm64
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup .NET Core SDK '6.0.x'
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: '6.0.x'
-      - name: Build
-        run: dotnet publish -c Release -o /home/runner/work/SQLite/release --runtime linux-arm64 --self-contained false 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: SQLite_Test_${{github.run_number}}
-          path: /home/runner/work/SQLite/release
-          retention-days: 5
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 #fetch-depth is needed for GitVersion
+        
+    #Install and calculate the new version with GitVersion  
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v0.9.7
+      with:
+        versionSpec: 5.x
+    - name: Determine Version
+      uses: gittools/actions/gitversion/execute@v0.9.7
+      id: gitversion # step id used as reference for output values
+    - name: Display GitVersion outputs
+      run: |
+        echo "Version: ${{ steps.gitversion.outputs.SemVer }}"
+        echo "CommitsSinceVersionSource: ${{ steps.gitversion.outputs.CommitsSinceVersionSource }}"
+        
+        
+    - name: Setup .NET Core SDK '6.0.x'
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '6.0.x'
+    - name: Build
+      run: dotnet pack -c Release -o /home/runner/work/SQLite/release
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: nugetPackage
+        path: /home/runner/work/SQLite/release
+          
+  release:
+    name: Release to NuGet
+    runs-on: ubuntu-latest    
+    needs: build
+    if: github.ref == 'refs/heads/main' # only run job if on the main branch  
+    
+    steps:  
+    - name: Download nuget package artifact
+      uses: actions/download-artifact@v1.0.0
+      with:
+        name: nugetPackage
+
+    - name: Prep packages
+      run: dotnet nuget add source --username RusysDev --password ${{secrets.GITHUB_TOKEN}} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/RusysDev/index.json"
+    - name: Push package to GitHub packages     
+      if: needs.build.outputs.CommitsSinceVersionSource > 0 #Only release if there has been a commit/version change 
+      run: dotnet nuget push nugetPackage/*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "github"
+
+    - name: Create Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      with:
+        tag_name: ${{ needs.build.outputs.Version }}
+        release_name: Release ${{ needs.build.outputs.Version }}
+    - name: Create Release
+      if: needs.build.outputs.CommitsSinceVersionSource > 0
+      uses: ncipollo/release-action@v1
+      with:
+        tag: ${{ needs.build.outputs.Version }}
+        name: Release ${{ needs.build.outputs.Version }}
+        artifacts: "nugetPackage/*"
+        token: ${{ secrets.GITHUB_TOKEN }}
