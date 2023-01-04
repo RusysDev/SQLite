@@ -16,83 +16,7 @@ jobs:
       id: get-version
       with:
           proj-path: SQLite/SQLite.csproj
-    - run: echo "${{steps.get-version.outputs.version}}"
-    - run: echo "${{steps.get-version.outputs.version-prefix}}" 
-    - run: echo "${{steps.get-version.outputs.version-suffix}}" 
-    - run: echo "${{steps.get-version.outputs.package-version}}" 
-    - run: echo "${{steps.get-version.outputs.assembly-version}}" 
-    - run: echo "${{steps.get-version.outputs.file-version}}" 
-    - run: echo "${{steps.get-version.outputs.informational-version}}" 
-    
-   #   with:
-   #     node-version: 16
-   #     fetch-depth: 0 #fetch-depth is needed for GitVersion
-      
-    - name: Fetch all history for all tags and branches
-      run: git fetch --prune
-      
-    - name: Setup.NET Core
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '6.0.x'
-
-    - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v0.9.15
-      with:
-          versionSpec: '5.5.0'
           
-    - name: Use GitVersion
-      id: gitversion # step id used as reference for output values
-      uses: gittools/actions/gitversion/execute@v0.9.15
-    - run: |
-        echo "Major: ${{ steps.gitversion.outputs.major }}"
-        echo "Minor: ${{ steps.gitversion.outputs.minor }}"
-        echo "Patch: ${{ steps.gitversion.outputs.patch }}"
-        echo "PreReleaseTag: ${{ steps.gitversion.outputs.preReleaseTag }}"
-        echo "PreReleaseTagWithDash: ${{ steps.gitversion.outputs.preReleaseTagWithDash }}"
-        echo "PreReleaseLabel: ${{ steps.gitversion.outputs.preReleaseLabel }}"
-        echo "PreReleaseNumber: ${{ steps.gitversion.outputs.preReleaseNumber }}"
-        echo "WeightedPreReleaseNumber: ${{ steps.gitversion.outputs.weightedPreReleaseNumber }}"
-        echo "BuildMetaData: ${{ steps.gitversion.outputs.buildMetaData }}"
-        echo "BuildMetaDataPadded: ${{ steps.gitversion.outputs.buildMetaDataPadded }}"
-        echo "FullBuildMetaData: ${{ steps.gitversion.outputs.fullBuildMetaData }}"
-        echo "MajorMinorPatch: ${{ steps.gitversion.outputs.majorMinorPatch }}"
-        echo "SemVer: ${{ steps.gitversion.outputs.semVer }}"
-        echo "LegacySemVer: ${{ steps.gitversion.outputs.legacySemVer }}"
-        echo "LegacySemVerPadded: ${{ steps.gitversion.outputs.legacySemVerPadded }}"
-        echo "AssemblySemVer: ${{ steps.gitversion.outputs.assemblySemVer }}"
-        echo "AssemblySemFileVer: ${{ steps.gitversion.outputs.assemblySemFileVer }}"
-        echo "FullSemVer: ${{ steps.gitversion.outputs.fullSemVer }}"
-        echo "InformationalVersion: ${{ steps.gitversion.outputs.informationalVersion }}"
-        echo "BranchName: ${{ steps.gitversion.outputs.branchName }}"
-        echo "Sha: ${{ steps.gitversion.outputs.sha }}"
-        echo "ShortSha: ${{ steps.gitversion.outputs.shortSha }}"
-        echo "NuGetVersionV2: ${{ steps.gitversion.outputs.nuGetVersionV2 }}"
-        echo "NuGetVersion: ${{ steps.gitversion.outputs.nuGetVersion }}"
-        echo "NuGetPreReleaseTagV2: ${{ steps.gitversion.outputs.nuGetPreReleaseTagV2 }}"
-        echo "NuGetPreReleaseTag: ${{ steps.gitversion.outputs.nuGetPreReleaseTag }}"
-        echo "VersionSourceSha: ${{ steps.gitversion.outputs.versionSourceSha }}"
-        echo "CommitsSinceVersionSource: ${{ steps.gitversion.outputs.commitsSinceVersionSource }}"
-        echo "CommitsSinceVersionSourcePadded: ${{ steps.gitversion.outputs.commitsSinceVersionSourcePadded }}"
-        echo "CommitDate: ${{ steps.gitversion.outputs.commitDate }}"
-        
-        
-        
-        
-    #Install and calculate the new version with GitVersion  
-    - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v0.9.7
-      with:
-        versionSpec: 5.x
-    - name: Determine Version
-      uses: gittools/actions/gitversion/execute@v0.9.7
-      id: gitversionz # step id used as reference for output values
-    - name: Display GitVersion outputs
-      run: |
-        echo "Version: ${{ steps.gitversion.outputs.SemVer }}"
-        echo "CommitsSinceVersionSource: ${{ steps.gitversion.outputs.CommitsSinceVersionSource }}"
-        
-        
     - name: Setup .NET Core SDK '6.0.x'
       uses: actions/setup-dotnet@v3
       with:
@@ -112,14 +36,14 @@ jobs:
     
     steps:  
     - name: Download nuget package artifact
-      uses: actions/download-artifact@v1.0.0
+      uses: actions/download-artifact@v3
       with:
         name: nugetPackage
 
     - name: Prep packages
       run: dotnet nuget add source --username RusysDev --password ${{secrets.GITHUB_TOKEN}} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/RusysDev/index.json"
+
     - name: Push package to GitHub packages     
-      if: needs.build.outputs.CommitsSinceVersionSource > 0 #Only release if there has been a commit/version change 
       run: dotnet nuget push nugetPackage/*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "github"
 
     - name: Create Release
@@ -127,13 +51,13 @@ jobs:
       env:
         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       with:
-        tag_name: ${{ needs.build.outputs.Version }}
-        release_name: Release ${{ needs.build.outputs.Version }}
+        tag_name: ${{steps.get-version.outputs.assembly-version}}
+        release_name: Release ${{steps.get-version.outputs.assembly-version}}
+
     - name: Create Release
-      if: needs.build.outputs.CommitsSinceVersionSource > 0
       uses: ncipollo/release-action@v1
       with:
-        tag: ${{ needs.build.outputs.Version }}
-        name: Release ${{ needs.build.outputs.Version }}
+        tag: ${{steps.get-version.outputs.assembly-version}}
+        name: Release ${{steps.get-version.outputs.assembly-version}}
         artifacts: "nugetPackage/*"
         token: ${{ secrets.GITHUB_TOKEN }}
