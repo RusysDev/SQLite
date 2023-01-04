@@ -6,12 +6,17 @@
 		<Nullable>enable</Nullable>
 		<RepositoryUrl>https://github.com/RusysDev/SQLite</RepositoryUrl>
 		<PackageProjectUrl>https://github.com/RusysDev/SQLite</PackageProjectUrl>
-		<AssemblyName>RusysDev.$(MSBuildProjectName)</AssemblyName>
-		<RootNamespace>RusysDev.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+		<AssemblyName>SQLite</AssemblyName>
+		<RootNamespace>RusysDev.SQLite</RootNamespace>
 		<Title>SQLite</Title>
 		<AssemblyVersion>1.0.1</AssemblyVersion>
 		<FileVersion>$(AssemblyVersion)</FileVersion>
 		<Version>$(AssemblyVersion)</Version>
+		<VersionSuffix></VersionSuffix>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'!='Release|AnyCPU'">
+		<VersionSuffix>test</VersionSuffix>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
