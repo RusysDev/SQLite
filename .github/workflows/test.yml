@@ -11,12 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Get project version
-      uses: kzrnm/get-net-sdk-project-versions-action@v1.1.2
-      id: get-version
-      with:
-          proj-path: SQLite/SQLite.csproj
-          
+    
     - name: Setup .NET Core'
       uses: actions/setup-dotnet@v3
       with:
