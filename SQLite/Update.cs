@@ -35,8 +35,9 @@ namespace SQLite {
 				var vint = Version.Int;
 				if (mtd is not null) {
 					foreach (var i in mtd.Updates) if (i.Version > vint && !string.IsNullOrEmpty(i.Query)) Updates.Add(i);
-					Updates = Updates.OrderBy(x=>x.Version).ToList();
+					Updates = Updates.OrderBy(x => x.Version).ToList();
 				}
+				if (Updates.Count == 0) File.Delete(Config);
 			}
 		}
 		
@@ -54,8 +55,6 @@ namespace SQLite {
 		}
 
 		public SqlUpdExec Execute() {
-
-			Console.WriteLine("Executing config");
 			var tmr = System.Diagnostics.Stopwatch.StartNew();
 			var ret = new SqlUpdExec();
 			try {
@@ -64,16 +63,13 @@ namespace SQLite {
 					if (!string.IsNullOrEmpty(i.Query)) {
 						var sw = System.Diagnostics.Stopwatch.StartNew();
 						new Sql(i.Query).Execute();
-						Version.Number = i.Version; Version.Value = i.Name;
+						Version.Number = i.Version; Version.Value = i.Name; Version.Update();
 						ret.Add(new() {
 							Number = inc++, Version = i.Version, Name = i.Name,
 							ExecTime = sw.ElapsedMilliseconds
 						});
 					}
 				}
-				Console.WriteLine("Updating version");
-				Version.Update();
-				Console.WriteLine("Deleting file: " + Config);
 				File.Delete(Config);
 
 			} catch (Exception ex) { ret.Error = true; ret.Message = ex.Message; }
