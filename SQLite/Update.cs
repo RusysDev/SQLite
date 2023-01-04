@@ -29,6 +29,7 @@ namespace SQLite {
 
 			//Try get xml file
 			if (File.Exists(Config)) {
+				Console.WriteLine("Reading config");
 				using var rdr = new StreamReader(Config);
 				var mtd = (SqlUpdList?)new XmlSerializer(typeof(SqlUpdList)).Deserialize(rdr);
 				var vint = Version.Int;
@@ -53,6 +54,8 @@ namespace SQLite {
 		}
 
 		public SqlUpdExec Execute() {
+
+			Console.WriteLine("Executing config");
 			var tmr = System.Diagnostics.Stopwatch.StartNew();
 			var ret = new SqlUpdExec();
 			try {
@@ -68,7 +71,9 @@ namespace SQLite {
 						});
 					}
 				}
+				Console.WriteLine("Updating version");
 				Version.Update();
+				Console.WriteLine("Deleting file: " + Config);
 				File.Delete(Config);
 
 			} catch (Exception ex) { ret.Error = true; ret.Message = ex.Message; }
