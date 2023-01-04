@@ -1,11 +1,8 @@
 ﻿using Microsoft.Data.Sqlite;
-using SQLite.Config;
-using System.Data;
-using System.Reflection;
 using System.Text.Json;
-using System.Xml.Serialization;
 
-namespace SQLite {
+namespace RusysDev.SQLite {
+	using Config;
 
 	public class Sql {
 		private static string? DbConn { get; set; }

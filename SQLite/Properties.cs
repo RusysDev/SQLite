@@ -9,7 +9,7 @@ using System.Text.Json;
 //  Properties and attributes for main code
 // -----------------------
 
-namespace SQLite {
+namespace RusysDev.SQLite {
 	/// <summary>Sql parameter collection</summary>
 	public class SqlParams : List<ValueTuple<string, object?>> {
 		/// <summary>Get all parameters as Key/Value dictionary object</summary>

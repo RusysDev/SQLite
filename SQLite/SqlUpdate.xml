@@ -1,18 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <SqlUpdates>
 	<SqlUpdate Name="Base" Version="1">
-		<Query>
-			SELECT * FROM PRAGMA_TABLE_INFO('Config')
-		</Query>
-	</SqlUpdate>
-	<SqlUpdate Name="Base2" Version="2">
-		<Query>
-			SELECT * FROM PRAGMA_TABLE_INFO('Config')
-		</Query>
-	</SqlUpdate>
-	<SqlUpdate Name="Base3" Version="3">
-		<Query>
-			SELECT * FROM PRAGMA_TABLE_INFO('Config')
-		</Query>
+		<Query></Query>
 	</SqlUpdate>
 </SqlUpdates>

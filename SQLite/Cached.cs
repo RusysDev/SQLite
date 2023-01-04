@@ -9,7 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Net.Http.Headers;
 using System.Xml.Linq;
 
-namespace SQLite {
+namespace RusysDev.SQLite {
 	/// <summary>Cached database items base class for extensions</summary>
 	/// <typeparam name="T">Object type to store items</typeparam>
 	public class SqlCached<T> where T : new() {

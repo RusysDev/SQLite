@@ -1,9 +1,9 @@
-﻿using SQLite.Config;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Xml.Serialization;
 
-namespace SQLite {
+namespace RusysDev.SQLite {
 	using Updates;
+	using Config;
 	/// <summary>Database update class</summary>
 	public class SqlUpdate {
 		private static readonly string Sql_Create = "CREATE TABLE Config (cfg_id INTEGER PRIMARY KEY AUTOINCREMENT, cfg_key TEXT(50), cfg_name TEXT(255), cfg_value TEXT(255) ,cfg_num INTEGER, cfg_data TEXT, cfg_descr TEXT);";
@@ -76,7 +76,6 @@ namespace SQLite {
 			ret.ExecTime = tmr.ElapsedMilliseconds;
 			return ret;
 		}
-
 	}
 
 	namespace Updates {

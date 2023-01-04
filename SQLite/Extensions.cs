@@ -6,7 +6,7 @@
 //  This code is used to simplify general SQLite classes
 // -----------------------
 
-namespace SQLite {
+namespace RusysDev.SQLite {
 	public static class Extensions {
 		public static bool IsList(this object o) {
 			if (o == null) return false;

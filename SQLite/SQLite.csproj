@@ -1,9 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<RepositoryUrl>https://github.com/RusysDev/SQLite</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/RusysDev/SQLite</PackageProjectUrl>
+		<AssemblyName>RusysDev.$(MSBuildProjectName)</AssemblyName>
+		<RootNamespace>RusysDev.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+		<Title>SQLite</Title>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
