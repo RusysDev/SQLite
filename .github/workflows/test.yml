@@ -11,9 +11,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+    - name: get-net-sdk-project-versions-action
+      uses: kzrnm/get-net-sdk-project-versions-action@v1.3.0
+      id: get-version
       with:
-        node-version: 16
-        fetch-depth: 0 #fetch-depth is needed for GitVersion
+          proj-path: YourProject/YourProject.csproj
+    - run: echo "${{steps.get-version.outputs.version}}"
+    - run: echo "${{steps.get-version.outputs.version-prefix}}" 
+    - run: echo "${{steps.get-version.outputs.version-suffix}}" 
+    - run: echo "${{steps.get-version.outputs.package-version}}" 
+    - run: echo "${{steps.get-version.outputs.assembly-version}}" 
+    - run: echo "${{steps.get-version.outputs.file-version}}" 
+    - run: echo "${{steps.get-version.outputs.informational-version}}" 
+   #   with:
+   #     node-version: 16
+   #     fetch-depth: 0 #fetch-depth is needed for GitVersion
       
     - name: Fetch all history for all tags and branches
       run: git fetch --prune
