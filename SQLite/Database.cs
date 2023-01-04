@@ -1,7 +1,9 @@
 ﻿using Microsoft.Data.Sqlite;
 using SQLite.Config;
 using System.Data;
+using System.Reflection;
 using System.Text.Json;
+using System.Xml.Serialization;
 
 namespace SQLite {
 
@@ -16,12 +18,20 @@ namespace SQLite {
 		private static string Init(string path) {
 			DbConn = $"Data Source={path}";
 
-			if (!GetTables().Contains("Config")) {
-				new Sql(Sql_Create).Execute();
-			}
-			Config.Reload();
+			//Check if Config table exists in database and create it
+			if (!GetTables().Contains("Config")) new Sql(Sql_Create).Execute();
+			
+			Config.Reload(true);
 			var vers = Config.GetItem("System", "Version");
 
+			var cfg = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? "", "SqlUpdate.xml");
+			if (File.Exists(cfg)) {
+
+		//		using var rdr = new StreamReader(CfgFile = new FileInfo(cfg).FullName);
+		//		var mtd = (Publishing?)new XmlSerializer(typeof(Publishing)).Deserialize(rdr);
+
+
+			}
 			//detect version
 
 			//get config xml

@@ -9,13 +9,13 @@ var sq = System.Diagnostics.Stopwatch.StartNew();
 Console.WriteLine("Connstart "+ sq.ElapsedMilliseconds/(float)1000);
 
 
-Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(m.ToDictionary(x => x.Item1, y => y.Item2)));
+//Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(m.ToDictionary(x => x.Item1, y => y.Item2)));
 
 
 var dirPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "SqlUpdate.xml");
 Console.WriteLine(dirPath);
 
-//Sql.Database = "hello.db";
+Sql.Database = "hello.db";
 
 ////var c = Sql.Config;
 
@@ -40,13 +40,13 @@ Console.ReadLine();
 
 
 
-public class Dta {
-	[SqlField(0)] public int Id { get; set; }
-	[SqlField(1, "name")] public string? Name { get; set; }
-	[SqlField(2), SqlJson] public Jsn? Value { get; set; }
-}
+//public class Dta {
+//	[SqlField(0)] public int Id { get; set; }
+//	[SqlField(1, "name")] public string? Name { get; set; }
+//	[SqlField(2), SqlJson] public Jsn? Value { get; set; }
+//}
 
-public class Jsn {
-	public int Id { get; set; }
-	public string? Text { get; set; }
-}
+//public class Jsn {
+//	public int Id { get; set; }
+//	public string? Text { get; set; }
+//}
