@@ -44,7 +44,7 @@ jobs:
       run: dotnet nuget add source --username RusysDev --password ${{secrets.GITHUB_TOKEN}} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/RusysDev/index.json"
 
     - name: Push package to GitHub packages     
-      run: dotnet nuget push nugetPackage/*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "github"
+      run: dotnet nuget push /home/runner/work/SQLite/release/nugetPackage/*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "github"
 
     - name: Create Release
       uses: actions/create-release@v1
