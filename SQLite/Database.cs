@@ -8,40 +8,19 @@ using System.Xml.Serialization;
 namespace SQLite {
 
 	public class Sql {
-		private static readonly string Sql_Create = "CREATE TABLE Config (cfg_id INTEGER PRIMARY KEY AUTOINCREMENT, cfg_key TEXT(50), cfg_name TEXT(255), cfg_value TEXT(255) ,cfg_num INTEGER, cfg_data TEXT, cfg_descr TEXT);" +
-			"INSERT INTO [Config] (cfg_key,cfg_name,cfg_value,cfg_num,cfg_descr) VALUES ('System','Version','v0',0,'Database version. Used to update database versions using SqlUpdate.xml');";
 		private static string? DbConn { get; set; }
 		public static string Database { get => DbConn ?? Init("main.db"); set { Init(value); } }
 
-		public static SqlConfig Config { get; } = new ();
+		public static SqlConfig Config { get; } = new();
 
 		private static string Init(string path) {
 			DbConn = $"Data Source={path}";
-
-			//Check if Config table exists in database and create it
-			if (!GetTables().Contains("Config")) new Sql(Sql_Create).Execute();
-			
-			Config.Reload(true);
-			var vers = Config.GetItem("System", "Version");
-
-			var cfg = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? "", "SqlUpdate.xml");
-			if (File.Exists(cfg)) {
-
-		//		using var rdr = new StreamReader(CfgFile = new FileInfo(cfg).FullName);
-		//		var mtd = (Publishing?)new XmlSerializer(typeof(Publishing)).Deserialize(rdr);
-
-
-			}
-			//detect version
-
-			//get config xml
-
-			//"Data Source=hello.db"
+			new SqlUpdate().PrintUpdates();
 			return DbConn;
 		}
 
 		public static List<string> GetTables() => new Sql("SELECT Name FROM sqlite_master WHERE type='table' and name not like 'sqlite_%'").GetList<string>();
-		public static List<SqlColumn> GetFields(string table) => new Sql("SELECT * FROM PRAGMA_TABLE_INFO($tbl)","$tbl",table).GetData<SqlColumn>();
+		public static List<SqlColumn> GetFields(string table) => new Sql("SELECT * FROM PRAGMA_TABLE_INFO($tbl)", "$tbl", table).GetData<SqlColumn>();
 
 
 		public string Query { get; set; }
@@ -50,7 +29,8 @@ namespace SQLite {
 		private SqliteConnection Conn() { var conn = new SqliteConnection(Database); conn.Open(); return conn; }
 		private SqliteCommand Cmd(SqliteConnection conn) {
 			var cmd = new SqliteCommand(Query, conn, Tran);
-			foreach (var i in Params) { cmd.Parameters.Add(new SqliteParameter(i.Item1, i.Item2)); }
+			foreach (var i in Params) { cmd.Parameters.Add(new SqliteParameter(i.Item1, i.Item2 ?? DBNull.Value)); }
+			Print();
 			return cmd;
 		}
 
@@ -140,6 +120,9 @@ namespace SQLite {
 			return ret;
 		}
 
+		private void Print() {
+			System.Diagnostics.Debug.WriteLine(Query + (Params.Count > 0 ? " \n" + JsonSerializer.Serialize(Params.Values) : ""), "SQL");
+		}
 
 	}
 

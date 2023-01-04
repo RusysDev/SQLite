@@ -27,7 +27,7 @@ namespace SQLite {
 		private void SetString(object obj, object? val) => Prop.SetValue(obj, val?.EmptyToNull());
 		private void SetData(object obj, object? val) => Prop.SetValue(obj, Convert.ChangeType(val, Prop.PropertyType));
 		private void SetEnum(object obj, object? val) => Prop.SetValue(obj, Enum.Parse(Prop.PropertyType, val?.ToString() ?? ""));
-		private void SetJson(object obj, object? val) { try { var jsn = JsonSerializer.Deserialize(val?.ToString() ?? "", Prop.PropertyType); Prop.SetValue(obj, jsn); } catch (Exception) { } }
+		private void SetJson(object obj, object? val) { try { var jsn = val is not null ? JsonSerializer.Deserialize(val.ToString() ?? "", Prop.PropertyType) : null; Prop.SetValue(obj, jsn); } catch (Exception) { } }
 		private void SetTry(object obj, object? val) { try { Prop.SetValue(obj, val?.ChangeType(Prop.PropertyType)); } catch (Exception) { SetJson(obj, val); } }
 
 		/// <summary>Property ID</summary>
@@ -45,7 +45,7 @@ namespace SQLite {
 		/// <summary>Get property value for storing it to Database</summary>
 		/// <param name="obj">Object value</param>
 		/// <returns>Value of object for storing to Datbase</returns>
-		public object? GetValue(object? obj) => Json ? JsonSerializer.Serialize(Prop.GetValue(obj)) : Prop.GetValue(obj);
+		public object? GetValue(object? obj) { var val = Prop.GetValue(obj); return Json && val is not null ? JsonSerializer.Serialize(val) : val; }
 
 		public SqlProp(SqlField fld, PropertyInfo prop) {
 			Name = fld.Name ?? prop.Name; ID = fld.ID; Prop = prop;

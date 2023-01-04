@@ -35,7 +35,7 @@ Sql.Database = "hello.db";
 
 
 
-
+Console.Write("\nDone. ");
 Console.ReadLine();
 
 
