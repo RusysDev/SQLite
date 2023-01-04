@@ -61,7 +61,7 @@ namespace SQLite {
 					if (!string.IsNullOrEmpty(i.Query)) {
 						var sw = System.Diagnostics.Stopwatch.StartNew();
 						new Sql(i.Query).Execute();
-						Version.Number = i.Version; Version.Name = i.Name;
+						Version.Number = i.Version; Version.Value = i.Name;
 						ret.Add(new() {
 							Number = inc++, Version = i.Version, Name = i.Name,
 							ExecTime = sw.ElapsedMilliseconds
@@ -79,6 +79,7 @@ namespace SQLite {
 	}
 
 	namespace Updates {
+		[XmlRoot("SqlUpdates")]
 		public class SqlUpdList {
 			[XmlElement("SqlUpdate")] public List<SqlUpdItem> Updates { get; set; } = new();
 		}

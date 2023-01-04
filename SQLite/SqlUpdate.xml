@@ -10,4 +10,9 @@
 			SELECT * FROM PRAGMA_TABLE_INFO('Config')
 		</Query>
 	</SqlUpdate>
+	<SqlUpdate Name="Base3" Version="3">
+		<Query>
+			SELECT * FROM PRAGMA_TABLE_INFO('Config')
+		</Query>
+	</SqlUpdate>
 </SqlUpdates>
