@@ -7,66 +7,33 @@ on:
 
 jobs:
   build:
-    name: Build Linux arm64
+    name: Build package
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: get-net-sdk-project-versions-action
+   # - uses: actions/checkout@v3
+    - name: Get project version
       uses: kzrnm/get-net-sdk-project-versions-action@v1.1.2
       id: get-version
       with:
           proj-path: SQLite/SQLite.csproj
           
-    - name: Setup .NET Core SDK '6.0.x'
+    - name: Setup .NET Core'
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '6.0.x'
+        
     - name: Build
       run: dotnet pack -c Release -o /home/runner/work/SQLite/release
       
-    - name: Prep packages
+    - name: Prep package
       run: dotnet nuget add source --username RusysDev --password ${{secrets.GITHUB_TOKEN}} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/RusysDev/index.json"
 
     - name: Push package to GitHub packages     
-      run: dotnet nuget push /home/runner/work/SQLite/release/*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "github"
+      run: dotnet nuget push /home/runner/work/SQLite/release/*.nupkg --api-key ${{secrets.GITHUB_TOKEN}} --source "github"
 
-      
-      
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
       with:
         name: nugetPackage
         path: /home/runner/work/SQLite/release
           
-  release:
-    name: Release to NuGet
-    runs-on: ubuntu-latest    
-    needs: build
-    
-    steps:  
-    - name: Download nuget package artifact
-      uses: actions/download-artifact@v3
-      with:
-        name: nugetPackage
-
-    - name: Prep packages
-      run: dotnet nuget add source --username RusysDev --password ${{secrets.GITHUB_TOKEN}} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/RusysDev/index.json"
-
-    - name: Push package to GitHub packages     
-      run: dotnet nuget push /home/runner/work/SQLite/release/nugetPackage/*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "github"
-
-    - name: Create Release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      with:
-        tag_name: ${{steps.get-version.outputs.assembly-version}}
-        release_name: Release ${{steps.get-version.outputs.assembly-version}}
-
-    - name: Create Release
-      uses: ncipollo/release-action@v1
-      with:
-        tag: ${{steps.get-version.outputs.assembly-version}}
-        name: Release ${{steps.get-version.outputs.assembly-version}}
-        artifacts: "nugetPackage/*"
-        token: ${{ secrets.GITHUB_TOKEN }}
