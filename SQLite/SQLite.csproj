@@ -9,6 +9,9 @@
 		<AssemblyName>RusysDev.$(MSBuildProjectName)</AssemblyName>
 		<RootNamespace>RusysDev.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
 		<Title>SQLite</Title>
+		<AssemblyVersion>1.0.1</AssemblyVersion>
+		<FileVersion>$(AssemblyVersion)</FileVersion>
+		<Version>$(AssemblyVersion)</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
