@@ -13,8 +13,15 @@ namespace RusysDev.SQLite {
 		protected bool Running { get; set; }
 		protected DateTime NextReload { get; set; }
 		protected string Query { get; set; }
-		/// <summary>Cache reload interval in seconds</summary>
-		public int ReloadInterval { get; set; } = 5;
+
+		/// <summary>Cache reload interval in seconds (default:5)</summary>
+		public int ReloadInterval { get => RldInterval; set => RldInterval = value > 0 ? value : 5; }
+		private int RldInterval { get; set; }
+
+		/// <summary>Cache reload timeout in seconds (default:5)</summary>
+		public int ReloadTimeout { get => RldTimeout; set => RldTimeout = value > 0 ? value : 5; }
+		private int RldTimeout { get; set; }
+
 		private List<T> Cached { get; set; }
 		public List<T> Items => Reload();
 		public SqlCached(string sql) { Query = sql; Cached ??= new(); }
@@ -23,20 +30,30 @@ namespace RusysDev.SQLite {
 		/// <param name="items">Cached items list from database</param>
 		public virtual void OnReload(List<T> items) { }
 
+
 		/// <summary>Reload cached items from database</summary>
 		/// <param name="force">Force update, skip time value</param>
+		/// <param name="timeout">Timeout in seconds (default:5)</param>
 		/// <returns>Cached item list</returns>
-		public List<T> Reload(bool force = false) {
-			if (!force) while (Running) Thread.Sleep(1);
+		public List<T> Reload(bool force = false, int timeout = 0) {
+			if (Sql.Check && timeout < 1) timeout = ReloadTimeout;
+			if (!force) Wait(timeout);
 			if (NextReload < DateTime.UtcNow || force) {
 				try {
 					Running = true;
-					Cached = new Sql("SELECT * FROM [Config]").GetData<T>();
+					Cached = new Sql("SELECT * FROM [Config]") { Timeout = timeout }.GetData<T>();
 					NextReload = DateTime.UtcNow.AddSeconds(ReloadInterval);
 					OnReload(Cached);
 				} catch (Exception) { } finally { Running = false; }
 			}
 			return Cached;
+		}
+
+		private void Wait(int sec) {
+			if (sec < 1) sec = ReloadTimeout;
+			var ws = System.Diagnostics.Stopwatch.StartNew();
+			var stop = TimeSpan.FromSeconds(sec > 0 ? sec : 5);
+			while (Running && ws.Elapsed < stop) Thread.Sleep(1);
 		}
 	}
 

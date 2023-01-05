@@ -9,29 +9,49 @@ using System.Text.Json;
 
 namespace RusysDev.SQLite {
 	using Config;
+	using System.Security.Cryptography.X509Certificates;
 
 	public class Sql {
+		public static readonly bool Check = true;
+		private static string DBFile { get; set; } = "";
 		private static string? DbConn { get; set; }
-		public static string Database { get => DbConn ?? Init("main.db"); set { Init(value); } }
-
+		private static string DbConnStr => DbConn ?? Init();
+		public static string FilePath { get => DBFile; set => Init(string.IsNullOrEmpty(value) ? "main.db" : value); }
 		public static SqlConfig Config { get; } = new();
-
-		private static string Init(string path) {
-			var pt = $"Data Source={path}";
-			if (DbConn != pt) { DbConn = pt; new SqlUpdate().PrintUpdates(); }
-			return DbConn;
-		}
+		private static string Init(string path = "main.db") { DbConn = $"Data Source={DBFile = path}"; new SqlUpdate().ProcessUpdates(); return DbConn; }
 
 		public static List<string> GetTables() => new Sql("SELECT Name FROM sqlite_master WHERE type='table' and name not like 'sqlite_%'").GetList<string>();
 		public static List<SqlColumn> GetFields(string table) => new Sql("SELECT * FROM PRAGMA_TABLE_INFO($tbl)", "$tbl", table).GetData<SqlColumn>();
 
+		/// <summary>Create backup of SQLite database file</summary>
+		/// <param name="vers">
+		/// Version name (default:null)
+		/// Format: {dbfile}.{version}.bak</param>
+		/// <param name="keep"></param>
+		/// <returns></returns>
+		public static string Backup(string? vers = null, int keep = 0) {
+			var fl = FilePath;
+			var bk = $"{fl}.{(string.IsNullOrEmpty(vers) ? "" : $"{vers}.")}bak";
+			File.Copy(fl, bk, true);
+			//Perform backup cleanup
+			if (keep > 0 && vers is not null) {
+				var dir = Path.GetDirectoryName(new FileInfo(fl).FullName);
+				if (dir is not null) {
+					var baks = new DirectoryInfo(dir).GetFiles($"*.db.*.bak", SearchOption.TopDirectoryOnly);
+					foreach (var file in baks.OrderByDescending(file => file.CreationTime).Skip(keep)) { file.Delete(); }
+				}
+			}
+			return bk;
+		}
 
 		public string Query { get; set; }
 		public SqlParams Params { get; }
+		/// <summary>Sql Query timeout in seconds</summary>
+		public int Timeout { get; set; } = 10;
 		private SqliteTransaction? Tran { get; set; }
-		private SqliteConnection Conn() { var conn = new SqliteConnection(Database); conn.Open(); return conn; }
+		private SqliteConnection Conn() { var conn = new SqliteConnection(DbConnStr); conn.Open(); return conn; }
 		private SqliteCommand Cmd(SqliteConnection conn) {
-			var cmd = new SqliteCommand(Query, conn, Tran);
+			var cmd = new SqliteCommand(Query, conn, Tran) { CommandTimeout = Timeout > 0 ? Timeout : 10 };
 			cmd.Parameters.Add(new("$now", DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")));
 			foreach (var i in Params) { cmd.Parameters.Add(new SqliteParameter(i.Item1, i.Item2 ?? DBNull.Value)); }
 			Print();
@@ -54,7 +74,9 @@ namespace RusysDev.SQLite {
 			return ret;
 		}
 
-
+		/// <summary>Get rows from database formatted as selected class</summary>
+		/// <typeparam name="T">Class type for items</typeparam>
+		/// <returns>List of T objects</returns>
 		public List<T> GetData<T>() where T : new() {
 			var ret = new List<T>();
 			var pr = SqlProps.Get<T>();
@@ -63,6 +85,17 @@ namespace RusysDev.SQLite {
 			using var rdr = cmd.ExecuteReader();
 			while (rdr.Read()) ret.Add(pr.Fill<T>(rdr));
 			return ret;
+		}
+
+		/// <summary>Get single row from database formatted as selected class</summary>
+		/// <typeparam name="T">Class type for row</typeparam>
+		/// <returns>Row in database as T</returns>
+		public T? GetItem<T>() where T : new() {
+			var pr = SqlProps.Get<T>();
+			using var conn = Conn();
+			using var cmd = Cmd(conn);
+			using var rdr = cmd.ExecuteReader();
+			return rdr.Read() ? pr.Fill<T>(rdr) : default;
 		}
 
 		public int Execute() {
