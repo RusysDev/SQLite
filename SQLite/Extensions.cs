@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 
-// -----------------------
-//    SQLite extensions 
-// -----------------------
+// ------------------------------------------------------
+//                SQLite extensions 
+// ------------------------------------------------------
 //  This code is used to simplify general SQLite classes
-// -----------------------
+// ------------------------------------------------------
 
 namespace RusysDev.SQLite {
 	public static class Extensions {

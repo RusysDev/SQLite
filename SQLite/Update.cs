@@ -1,6 +1,12 @@
 ﻿using System.Reflection;
 using System.Xml.Serialization;
 
+// ------------------------------------------------
+//        SQLite Database version update
+// ------------------------------------------------
+//  Class for updating database from SqlUpdate.xml
+// ------------------------------------------------
+
 namespace RusysDev.SQLite {
 	using Updates;
 	using Config;

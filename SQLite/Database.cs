@@ -1,6 +1,12 @@
 ﻿using Microsoft.Data.Sqlite;
 using System.Text.Json;
 
+// ------------------------------------------------
+//          SQLite Database SDK main class
+// ------------------------------------------------
+//  Class for updating database from SqlUpdate.xml
+// ------------------------------------------------
+
 namespace RusysDev.SQLite {
 	using Config;
 

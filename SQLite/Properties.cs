@@ -3,11 +3,11 @@ using System.Collections.Concurrent;
 using System.Reflection;
 using System.Text.Json;
 
-// -----------------------
-//    SQLite Properties
-// -----------------------
+// -----------------------------------------
+//             SQLite Properties
+// -----------------------------------------
 //  Properties and attributes for main code
-// -----------------------
+// -----------------------------------------
 
 namespace RusysDev.SQLite {
 	/// <summary>Sql parameter collection</summary>

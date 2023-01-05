@@ -12,7 +12,7 @@
 		<AssemblyName>RusysDev.SQLite</AssemblyName>
 		<RootNamespace>RusysDev.SQLite</RootNamespace>
 
-		<VersionPrefix>1.0.2</VersionPrefix>
+		<VersionPrefix>1.0.3</VersionPrefix>
 		<VersionSuffix></VersionSuffix>
 		
 		<Authors>RusysDev</Authors>

@@ -1,11 +1,10 @@
-﻿
-// ----------------------------------------------------
-//    SQLite Cache & Config
-// ----------------------------------------------------
-//  Database configuration and Cached items
-// ----------------------------------------------------
+﻿using System.Diagnostics.CodeAnalysis;
 
-using System.Diagnostics.CodeAnalysis;
+// -----------------------------------------
+//           SQLite Cache & Config
+// -----------------------------------------
+//  Database configuration and Cached items
+// -----------------------------------------
 
 namespace RusysDev.SQLite {
 	/// <summary>Cached database items base class for extensions</summary>
