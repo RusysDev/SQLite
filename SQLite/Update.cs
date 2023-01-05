@@ -36,12 +36,13 @@ namespace RusysDev.SQLite {
 
 			//Try get xml file
 			if (File.Exists(Config)) {
-				using var rdr = new StreamReader(Config);
-				var mtd = (SqlUpdList?)new XmlSerializer(typeof(SqlUpdList)).Deserialize(rdr);
-				var vint = Version.Int;
-				if (mtd is not null) {
-					foreach (var i in mtd.Updates) if (i.Version > vint && !string.IsNullOrEmpty(i.Query)) Updates.Add(i);
-					Updates = Updates.OrderBy(x => x.Version).ToList();
+				using (var rdr = new StreamReader(Config)) {
+					var mtd = (SqlUpdList?)new XmlSerializer(typeof(SqlUpdList)).Deserialize(rdr);
+					var vint = Version.Int;
+					if (mtd is not null) {
+						foreach (var i in mtd.Updates) if (i.Version > vint && !string.IsNullOrEmpty(i.Query)) Updates.Add(i);
+						Updates = Updates.OrderBy(x => x.Version).ToList();
+					}
 				}
 				if (Updates.Count == 0) File.Delete(Config);
 			}

@@ -15,12 +15,12 @@ namespace RusysDev.SQLite {
 		protected string Query { get; set; }
 
 		/// <summary>Cache reload interval in seconds (default:5)</summary>
-		public int ReloadInterval { get => RldInterval; set => RldInterval = value > 0 ? value : 5; }
-		private int RldInterval { get; set; }
+		public int ReloadInterval { get => RldInterval ?? 5; set => RldInterval = value > 0 ? value : 5; }
+		private int? RldInterval { get; set; }
 
 		/// <summary>Cache reload timeout in seconds (default:5)</summary>
-		public int ReloadTimeout { get => RldTimeout; set => RldTimeout = value > 0 ? value : 5; }
-		private int RldTimeout { get; set; }
+		public int ReloadTimeout { get => RldTimeout ?? 5; set => RldTimeout = value > 0 ? value : 5; }
+		private int? RldTimeout { get; set; }
 
 		private List<T> Cached { get; set; }
 		public List<T> Items => Reload();
