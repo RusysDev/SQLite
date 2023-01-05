@@ -1,5 +1,5 @@
 ﻿
-using SQLite;
+using RusysDev.SQLite;
 using System.Reflection;
 
 Console.WriteLine("Hello, World!");
@@ -8,12 +8,7 @@ var tsk = new List<Task>();
 var sq = System.Diagnostics.Stopwatch.StartNew();
 Console.WriteLine("Connstart "+ sq.ElapsedMilliseconds/(float)1000);
 
-
-//Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(m.ToDictionary(x => x.Item1, y => y.Item2)));
-
-
-var dirPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "SqlUpdate.xml");
-Console.WriteLine(dirPath);
+var m = Sql.Config.Items;
 
 Sql.Database = "hello.db";
 

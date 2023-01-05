@@ -6,8 +6,6 @@
 // ----------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using System.Net.Http.Headers;
-using System.Xml.Linq;
 
 namespace RusysDev.SQLite {
 	/// <summary>Cached database items base class for extensions</summary>
@@ -30,7 +28,7 @@ namespace RusysDev.SQLite {
 		/// <param name="force">Force update, skip time value</param>
 		/// <returns>Cached item list</returns>
 		public List<T> Reload(bool force = false) {
-			while (Running) { Thread.Sleep(1); }
+			if (!force) while (Running) Thread.Sleep(1);
 			if (NextReload < DateTime.UtcNow || force) {
 				try {
 					Running = true;
