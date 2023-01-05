@@ -9,7 +9,7 @@
 		<AssemblyName>SQLite</AssemblyName>
 		<RootNamespace>RusysDev.SQLite</RootNamespace>
 		<Title>SQLite</Title>
-		<AssemblyVersion>1.0.5</AssemblyVersion>
+		<AssemblyVersion>1.0.6</AssemblyVersion>
 		<FileVersion>$(AssemblyVersion)</FileVersion>
 		<Version>$(AssemblyVersion)</Version>
 	</PropertyGroup>
