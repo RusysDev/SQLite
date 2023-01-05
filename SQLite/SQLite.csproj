@@ -23,6 +23,7 @@
 		
 		<EmbedAllSources>true</EmbedAllSources>
 		<IncludeSymbols>true</IncludeSymbols>
+		<DebugSymbols>true</DebugSymbols>
 		<DebugType>full</DebugType>
 	</PropertyGroup>
 
