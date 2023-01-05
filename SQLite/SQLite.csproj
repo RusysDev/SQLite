@@ -4,15 +4,17 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		
 		<RepositoryUrl>https://github.com/RusysDev/SQLite</RepositoryUrl>
 		<PackageProjectUrl>https://github.com/RusysDev/SQLite</PackageProjectUrl>
+		
+		<Title>SQLite</Title>
 		<AssemblyName>RusysDev.SQLite</AssemblyName>
 		<RootNamespace>RusysDev.SQLite</RootNamespace>
-		<Title>SQLite</Title>
-		<AssemblyVersion>1.0.0</AssemblyVersion>
+
+		<AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
 		<FileVersion>$(AssemblyVersion)</FileVersion>
 		<Version>$(AssemblyVersion)</Version>
-		<EmbedAllSources>true</EmbedAllSources>
 
 		<VersionPrefix>1.0.0</VersionPrefix>
 		<VersionSuffix>alpha</VersionSuffix>
@@ -21,6 +23,8 @@
 		<Company>Rusys</Company>
 		<PackageDescription>SDK for SQLite database</PackageDescription>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
+		
+		<EmbedAllSources>true</EmbedAllSources>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -34,12 +38,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.1" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Update="SqlUpdate.xml">
-	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-	  </None>
 	</ItemGroup>
 
 </Project>
