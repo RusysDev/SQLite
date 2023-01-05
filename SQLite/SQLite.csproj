@@ -9,10 +9,14 @@
 		<AssemblyName>RusysDev.SQLite</AssemblyName>
 		<RootNamespace>RusysDev.SQLite</RootNamespace>
 		<Title>SQLite</Title>
-		<AssemblyVersion>1.0.0</AssemblyVersion>
+		<AssemblyVersion>1.0.0-beta</AssemblyVersion>
 		<FileVersion>$(AssemblyVersion)</FileVersion>
 		<Version>$(AssemblyVersion)</Version>
 		<EmbedAllSources>true</EmbedAllSources>
+		
+		<Authors>RusysDev</Authors>
+		<Company>Rusys</Company>
+		<PackageDescription>SDK for SQLite database</PackageDescription>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'!='Release|AnyCPU'">
@@ -24,10 +28,6 @@
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<VersionSuffix></VersionSuffix>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.1" />
-	</ItemGroup>
 
 	<ItemGroup>
 	  <None Update="SqlUpdate.xml">
