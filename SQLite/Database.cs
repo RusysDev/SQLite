@@ -11,8 +11,8 @@ namespace RusysDev.SQLite {
 		public static SqlConfig Config { get; } = new();
 
 		private static string Init(string path) {
-			DbConn = $"Data Source={path}";
-			new SqlUpdate().PrintUpdates();
+			var pt = $"Data Source={path}";
+			if (DbConn != pt) { DbConn = pt; new SqlUpdate().PrintUpdates(); }
 			return DbConn;
 		}
 

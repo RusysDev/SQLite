@@ -18,6 +18,8 @@ namespace RusysDev.SQLite {
 		/// <param name="key">Parameter key (Starts with $)</param>
 		/// <param name="value">Parameter value</param>
 		public void Add(string key, object? value) => Add(new(key, value));
+		public SqlParams(Dictionary<string, object?> dt) { foreach (var i in dt) Add(new(i.Key, i.Value)); }
+		public SqlParams(params ValueTuple<string, object?>[] pairs) { foreach (var i in pairs) Add(i); }
 	}
 
 	/// <summary>Sql query property item</summary>
