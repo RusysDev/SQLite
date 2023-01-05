@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-// ------------------------------------------------------
+﻿// ------------------------------------------------------
 //                SQLite extensions 
 // ------------------------------------------------------
 //  This code is used to simplify general SQLite classes
@@ -11,12 +9,12 @@ namespace RusysDev.SQLite {
 		public static bool IsList(this object o) {
 			if (o == null) return false;
 			if (o is Type type) { return type.IsGenericType && type.GetGenericTypeDefinition().IsAssignableFrom(typeof(List<>)); }
-			return o is IList && o.GetType().IsGenericType && o.GetType().GetGenericTypeDefinition().IsAssignableFrom(typeof(List<>));
+			return o is System.Collections.IList && o.GetType().IsGenericType && o.GetType().GetGenericTypeDefinition().IsAssignableFrom(typeof(List<>));
 		}
 		public static bool IsDictionary(this object o) {
 			if (o == null) return false;
 			if (o is Type type) { return type.IsGenericType && type.GetGenericTypeDefinition().IsAssignableFrom(typeof(Dictionary<,>)); }
-			return o is IDictionary && o.GetType().IsGenericType && o.GetType().GetGenericTypeDefinition().IsAssignableFrom(typeof(Dictionary<,>));
+			return o is System.Collections.IDictionary && o.GetType().IsGenericType && o.GetType().GetGenericTypeDefinition().IsAssignableFrom(typeof(Dictionary<,>));
 		}
 		public static object? ChangeType(this object? value, Type t) {
 			if (t.IsGenericType && t.GetGenericTypeDefinition().Equals(typeof(Nullable<>))) {

@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-// -----------------------------------------
+﻿// -----------------------------------------
 //           SQLite Cache & Config
 // -----------------------------------------
 //  Database configuration and Cached items
@@ -8,7 +6,7 @@
 
 namespace RusysDev.SQLite {
 	/// <summary>Cached database items base class for extensions</summary>
-	/// <typeparam name="T">Object type to store items</typeparam>
+	/// <typeparam name="T">Object type to store items</typepara
 	public class SqlCached<T> where T : new() {
 		protected bool Running { get; set; }
 		protected DateTime NextReload { get; set; }
@@ -77,7 +75,7 @@ namespace RusysDev.SQLite {
 			private static readonly string Sql_Update = "UPDATE [Config] SET cfg_value=$cfg_value,cfg_num=$cfg_num,cfg_data=$cfg_data,cfg_descr=COALESCE($descr,cfg_descr) WHERE cfg_id=$cfg_id or (cfg_key=$cfg_key and cfg_name=$cfg_name);";
 
 			private Dictionary<string, CfgItem> CachedItems { get; set; } = new();
-			private bool TryGetValue(string key, string name, [MaybeNullWhen(false)] out CfgItem value) { Reload(); return CachedItems.TryGetValue($"{key}|{name}", out value); }
+			private bool TryGetValue(string key, string name, [System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out CfgItem value) { Reload(); return CachedItems.TryGetValue($"{key}|{name}", out value); }
 			/// <summary>Method to get configuration item</summary>
 			/// <param name="key">Key value</param>
 			/// <param name="name">Name value</param>

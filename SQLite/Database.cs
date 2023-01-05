@@ -9,7 +9,6 @@ using System.Text.Json;
 
 namespace RusysDev.SQLite {
 	using Config;
-	using System.Security.Cryptography.X509Certificates;
 
 	public class Sql {
 		public static readonly bool Check = true;

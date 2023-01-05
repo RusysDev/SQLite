@@ -1,6 +1,4 @@
-﻿using Microsoft.Data.Sqlite;
-using System.Collections.Concurrent;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text.Json;
 
 // -----------------------------------------
@@ -77,7 +75,7 @@ namespace RusysDev.SQLite {
 	}
 
 	public static class SqlProps {
-		private static ConcurrentDictionary<string, List<SqlProp>> List { get; set; } = new();
+		private static System.Collections.Concurrent.ConcurrentDictionary<string, List<SqlProp>> List { get; set; } = new();
 		public static List<SqlProp> Get<T>() {
 			var tp = typeof(T);
 			var nme = tp.FullName ?? tp.ToString();
@@ -92,7 +90,7 @@ namespace RusysDev.SQLite {
 				return ret;
 			}
 		}
-		public static T Fill<T>(this List<SqlProp> lst, SqliteDataReader rdr) where T : new() {
+		public static T Fill<T>(this List<SqlProp> lst, Microsoft.Data.Sqlite.SqliteDataReader rdr) where T : new() {
 			var ret = new T();
 			foreach (var i in lst) { i.SetValue(ret, i.ID > 0 ? rdr[i.ID] : rdr[i.Name]); }
 			return ret;

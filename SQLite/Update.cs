@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 // ------------------------------------------------
 //        SQLite Database version update
@@ -10,7 +9,6 @@ using System.Xml.Serialization;
 namespace RusysDev.SQLite {
 	using Updates;
 	using Config;
-	using SQLitePCL;
 
 	/// <summary>Database update class</summary>
 	public class SqlUpdate {
@@ -18,7 +16,7 @@ namespace RusysDev.SQLite {
 
 		public List<SqlUpdItem> Updates { get; set; } = new();
 		public CfgItem Version { get; private set; }
-		public string Config { get; } = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? "", "SqlUpdate.xml");
+		public string Config { get; } = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) ?? "", "SqlUpdate.xml");
 		
 		public SqlUpdate() {
 			//Check if Config table exists in database and create it
