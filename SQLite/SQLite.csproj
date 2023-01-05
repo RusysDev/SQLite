@@ -19,6 +19,7 @@
 		<Company>Rusys</Company>
 		<PackageDescription>SDK for SQLite database</PackageDescription>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		
 		<EmbedAllSources>true</EmbedAllSources>
 		<DebugType>embedded</DebugType>
