@@ -26,6 +26,7 @@ namespace RusysDev.SQLite {
 		private SqliteConnection Conn() { var conn = new SqliteConnection(Database); conn.Open(); return conn; }
 		private SqliteCommand Cmd(SqliteConnection conn) {
 			var cmd = new SqliteCommand(Query, conn, Tran);
+			cmd.Parameters.Add(new("$now", DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")));
 			foreach (var i in Params) { cmd.Parameters.Add(new SqliteParameter(i.Item1, i.Item2 ?? DBNull.Value)); }
 			Print();
 			return cmd;
