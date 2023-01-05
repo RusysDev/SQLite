@@ -17,7 +17,7 @@ namespace RusysDev.SQLite {
 		private static string DbConnStr => DbConn ?? Init();
 		public static string FilePath { get => DBFile; set => Init(string.IsNullOrEmpty(value) ? "main.db" : value); }
 		public static SqlConfig Config { get; } = new();
-		private static string Init(string path = "main.db") { DbConn = $"Data Source={DBFile = path}"; new SqlUpdate().ProcessUpdates(); return DbConn; }
+		public static string Init(string path = "main.db") { DbConn = $"Data Source={DBFile = path}"; new SqlUpdate().ProcessUpdates(); return DbConn; }
 
 		public static List<string> GetTables() => new Sql("SELECT Name FROM sqlite_master WHERE type='table' and name not like 'sqlite_%'").GetList<string>();
 		public static List<SqlColumn> GetFields(string table) => new Sql("SELECT * FROM PRAGMA_TABLE_INFO($tbl)", "$tbl", table).GetData<SqlColumn>();
