@@ -12,21 +12,22 @@
 		<AssemblyVersion>1.0.0</AssemblyVersion>
 		<FileVersion>$(AssemblyVersion)</FileVersion>
 		<Version>$(AssemblyVersion)</Version>
+		<VersionSuffix>test</VersionSuffix>
 		<EmbedAllSources>true</EmbedAllSources>
 		
 		<Authors>RusysDev</Authors>
 		<Company>Rusys</Company>
 		<PackageDescription>SDK for SQLite database</PackageDescription>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'!='Release|AnyCPU'">
-		<VersionSuffix>test</VersionSuffix>
-	</PropertyGroup>
+	<ItemGroup>
+		<None Include="README.md" Pack="true" PackagePath="\"/>
+	</ItemGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<GenerateDependencyFile>false</GenerateDependencyFile>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-		<VersionSuffix></VersionSuffix>
 	</PropertyGroup>
 
 	<ItemGroup>
