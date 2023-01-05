@@ -29,8 +29,22 @@ namespace RusysDev.SQLite {
 		private void SetString(object obj, object? val) => Prop.SetValue(obj, val?.EmptyToNull());
 		private void SetData(object obj, object? val) => Prop.SetValue(obj, Convert.ChangeType(val, Prop.PropertyType));
 		private void SetEnum(object obj, object? val) => Prop.SetValue(obj, Enum.Parse(Prop.PropertyType, val?.ToString() ?? ""));
-		private void SetJson(object obj, object? val) { try { var jsn = val is not null ? JsonSerializer.Deserialize(val.ToString() ?? "", Prop.PropertyType) : null; Prop.SetValue(obj, jsn); } catch (Exception) { } }
-		private void SetTry(object obj, object? val) { try { Prop.SetValue(obj, val?.ChangeType(Prop.PropertyType)); } catch (Exception) { SetJson(obj, val); } }
+		private void SetJson(object obj, object? val) {
+			try {
+				object? jsn;
+				if (val is null) { jsn = null; }
+				else if (val is string srt) {
+					if (string.IsNullOrEmpty(srt) || srt.Length < 2) { jsn = null; }
+					else { jsn = JsonSerializer.Deserialize(srt, Prop.PropertyType); }
+				}
+				else { jsn = val; }
+				Prop.SetValue(obj, jsn);
+			} catch (Exception) { }
+		}
+		private void SetTry(object obj, object? val) { try { Prop.SetValue(obj, val?.ChangeType(Prop.PropertyType)); } catch (Exception) { 
+				
+				SetJson(obj, val);
+			} }
 
 		/// <summary>Property ID</summary>
 		public int ID { get; set; }
