@@ -24,10 +24,10 @@ jobs:
       run: dotnet nuget add source --username RusysDev --password ${{secrets.GITHUB_TOKEN}} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/RusysDev/index.json"
 
     - name: Push package to GitHub packages     
-      run: dotnet nuget push /home/runner/work/SQLite/release/* --api-key ${{secrets.GITHUB_TOKEN}} --source "github"
+      run: dotnet nuget push /home/runner/work/SQLite/release/*.nupkg --api-key ${{secrets.GITHUB_TOKEN}} --source "github"
 
-  #  - name: Push symbols to GitHub packages     
-  #    run: dotnet nuget push /home/runner/work/SQLite/release/*.snupkg --api-key ${{secrets.GITHUB_TOKEN}} --source "github"
+    - name: Push symbols to GitHub packages     
+      run: dotnet nuget push /home/runner/work/SQLite/release/*.snupkg --api-key ${{secrets.GITHUB_TOKEN}} --source "github"
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
