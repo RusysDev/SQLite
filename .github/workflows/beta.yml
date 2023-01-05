@@ -1,9 +1,9 @@
-name: Publish Package
+name: Publish Beta Package
 
 on:
   push:
     branches:
-      - master
+      - beta
 
 jobs:
   build:
@@ -18,8 +18,8 @@ jobs:
         dotnet-version: '6.0.x'
         
     - name: Build Package
-      run: dotnet pack -c Release -o /home/runner/work/SQLite/release -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg --include-source
-
+      run: dotnet pack -c Debug -o /home/runner/work/SQLite/release -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg --version-suffix "beta${{github.run_number}}"
+    
     - name: Push package to GitHub packages     
       run: dotnet nuget push "/home/runner/work/SQLite/release/*.nupkg" --api-key ${{secrets.nuget_api_key}} --source https://api.nuget.org/v3/index.json
     
