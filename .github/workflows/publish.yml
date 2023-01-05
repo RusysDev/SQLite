@@ -28,7 +28,7 @@ jobs:
     
     #  run: dotnet nuget push /home/runner/work/SQLite/release/*.nupkg --api-key ${{secrets.GITHUB_TOKEN}} --source "github"
 
-    - name: Push symbols to GitHub packages     
+    #- name: Push symbols to GitHub packages     
     #  run: dotnet nuget push /home/runner/work/SQLite/release/*.snupkg --api-key ${{secrets.GITHUB_TOKEN}} --source "github"
 
     - name: Upload Artifact
