@@ -18,7 +18,9 @@ jobs:
         dotnet-version: '6.0.x'
         
     - name: Build Package
-      run: dotnet pack -c Release -o /home/runner/work/SQLite/release -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg --include-source #-p:Version=1.0.0-betaABC
+      run: dotnet pack -c Debug -o /home/runner/work/SQLite/release -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg --include-source 
+      
+      #-p:Version=1.0.0-betaABC
       #--version-suffix "test-${{github.run_number}}"
     
     - name: Prep package
