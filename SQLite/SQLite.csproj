@@ -21,17 +21,12 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		
 		<EmbedAllSources>true</EmbedAllSources>
+		<DebugType>embedded</DebugType>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<None Include="README.md" Pack="true" PackagePath="\"/>
 	</ItemGroup>
-
-	<PropertyGroup Condition="'$(Configuration)'=='Release'">
-		<GenerateDependencyFile>false</GenerateDependencyFile>
-		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-	</PropertyGroup>
-
 
 	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
 		<VersionSuffix>beta</VersionSuffix>
