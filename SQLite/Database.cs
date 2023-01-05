@@ -21,7 +21,7 @@ namespace RusysDev.SQLite {
 
 
 		public string Query { get; set; }
-		public SqlParams Params { get; set; } = new();
+		public SqlParams Params { get; }
 		private SqliteTransaction? Tran { get; set; }
 		private SqliteConnection Conn() { var conn = new SqliteConnection(Database); conn.Open(); return conn; }
 		private SqliteCommand Cmd(SqliteConnection conn) {
@@ -31,11 +31,11 @@ namespace RusysDev.SQLite {
 			return cmd;
 		}
 
-		public Sql(string sql) { Query = sql; }
-		public Sql(string sql, string param, object? value) { Query = sql; Params.Add(param, value); }
-		public Sql(string sql, params ValueTuple<string, object?>[] param) { Query = sql; foreach (var i in param) { Params.Add(i); } }
+		public Sql(string sql) { Query = sql; Params = new(); }
+		public Sql(string sql, string param, object? value) { Query = sql; (Params = new()).Add(param, value); }
+		public Sql(string sql, params ValueTuple<string, object?>[] param) { Query = sql; Params = new(); foreach (var i in param) { Params.Add(i); } }
+		public Sql(string sql, SqlParams param) { Query = sql; Params = param; }
 
-		//	public DBParams(params ValueTuple<string, object?>[] pairs) { Data = pairs.ToDictionary(x => x.Item1, x => x.Item2); }
 
 		public List<object[]> GetArray() {
 			using var conn = Conn();
