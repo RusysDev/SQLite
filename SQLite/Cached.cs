@@ -83,18 +83,28 @@ namespace RusysDev.SQLite {
 			/// <param name="name">Name value</param>
 			/// <returns>Configuration item</returns>
 			public CfgItem? GetItem(string key, string name) => TryGetValue(key, name, out var item) ? item : null;
+
 			/// <summary>Get configuration item string value from Value field</summary>
 			/// <param name="key">Key value</param>
 			/// <param name="name">Name value</param>
 			/// <param name="default">Default value if null</param>
 			/// <returns>Configuration item Value field value</returns>
 			public string Val(string key, string name, string @default = "") => TryGetValue(key, name, out var item) ? (!string.IsNullOrEmpty(item.Value) ? item.Value : @default) : @default;
+
 			/// <summary>Get integer value from configuration item</summary>
 			/// <param name="key">Key value</param>
 			/// <param name="name">Name value</param>
 			/// <param name="default">Default value if configuration item is missing</param>
 			/// <returns>Integer value</returns>
 			public int Int(string key, string name, int @default = 0) => TryGetValue(key, name, out var item) ? (item.Number == 0 ? @default : (int)item.Number) : @default;
+
+			/// <summary>Get numeric (long) value from configuration item</summary>
+			/// <param name="key">Key value</param>
+			/// <param name="name">Name value</param>
+			/// <param name="default">Default value if configuration item is missing</param>
+			/// <returns>Numeric value</returns>
+			public long Number(string key, string name, long @default = 0) => TryGetValue(key, name, out var item) ? (item.Number == 0 ? @default : item.Number) : @default;
+
 			public SqlConfig() : base("SELECT * FROM [Config]") { }
 			public override void OnReload(List<CfgItem> items) {
 				CachedItems = new(); foreach (var i in items) { CachedItems[$"{i.Key}|{i.Name}"] = i; }
