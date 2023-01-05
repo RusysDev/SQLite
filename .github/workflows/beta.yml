@@ -1,0 +1,31 @@
+name: Publish Package
+
+on:
+  push:
+    branches:
+      - beta
+
+jobs:
+  build:
+    name: Build beta package
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup .NET Core'
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '6.0.x'
+        
+    - name: Build Package
+      run: dotnet pack -c Release -o /home/runner/work/SQLite/release -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg --version-suffix "beta${{github.run_number}}"
+    
+    - name: Push package to GitHub packages     
+      run: dotnet nuget push "/home/runner/work/SQLite/release/*.nupkg" --api-key ${{secrets.nuget_api_key}} --source https://api.nuget.org/v3/index.json
+    
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: nugetPackage
+        path: /home/runner/work/SQLite/release
+          
