@@ -6,10 +6,10 @@
 		<Nullable>enable</Nullable>
 		<RepositoryUrl>https://github.com/RusysDev/SQLite</RepositoryUrl>
 		<PackageProjectUrl>https://github.com/RusysDev/SQLite</PackageProjectUrl>
-		<AssemblyName>SQLite</AssemblyName>
+		<AssemblyName>RusysDev.SQLite</AssemblyName>
 		<RootNamespace>RusysDev.SQLite</RootNamespace>
 		<Title>SQLite</Title>
-		<AssemblyVersion>1.0.9</AssemblyVersion>
+		<AssemblyVersion>1.0.0</AssemblyVersion>
 		<FileVersion>$(AssemblyVersion)</FileVersion>
 		<Version>$(AssemblyVersion)</Version>
 		<EmbedAllSources>true</EmbedAllSources>
