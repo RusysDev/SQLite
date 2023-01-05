@@ -12,9 +12,11 @@
 		<AssemblyVersion>1.0.0</AssemblyVersion>
 		<FileVersion>$(AssemblyVersion)</FileVersion>
 		<Version>$(AssemblyVersion)</Version>
-		<VersionSuffix>test</VersionSuffix>
 		<EmbedAllSources>true</EmbedAllSources>
-		
+
+		<VersionPrefix>1.0.0</VersionPrefix>
+		<VersionSuffix>alpha</VersionSuffix>
+
 		<Authors>RusysDev</Authors>
 		<Company>Rusys</Company>
 		<PackageDescription>SDK for SQLite database</PackageDescription>
