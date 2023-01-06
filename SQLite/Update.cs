@@ -38,7 +38,7 @@ namespace RusysDev.SQLite {
 					var mtd = (SqlUpdList?)new XmlSerializer(typeof(SqlUpdList)).Deserialize(rdr);
 					var vint = Version.Int;
 					if (mtd is not null) {
-						foreach (var i in mtd.Updates) if (i.Version > vint && !string.IsNullOrEmpty(i.Query)) Updates.Add(i);
+						foreach (var i in mtd.Updates) if (i.Version > vint && i.Query?.Count > 0) Updates.Add(i);
 						Updates = Updates.OrderBy(x => x.Version).ToList();
 					}
 				}
@@ -67,14 +67,13 @@ namespace RusysDev.SQLite {
 				Sql.Backup($"update.v{Version.Number}");
 				var inc = 1;
 				foreach (var i in Updates) {
-					if (!string.IsNullOrEmpty(i.Query)) {
+					if (i.Query?.Count > 0) {
 						var sw = System.Diagnostics.Stopwatch.StartNew();
-						
-						new Sql(i.Query).Execute();
+						foreach (var j in i.Query) new Sql(j).Execute();
 						ret.Add(new() {
 							Number = inc++, Version = i.Version, Name = i.Name,
 							ExecTime = sw.ElapsedMilliseconds
-						}); 
+						});
 						Version.Number = vers = i.Version; Version.Value = i.Name; Version.Update();
 						File.AppendAllText("sqlpdate.log", $"Update: v{i.Version} - {i.Name} ({(double)sw.ElapsedMilliseconds / 1000}s)" + Environment.NewLine);
 					}
@@ -98,7 +97,7 @@ namespace RusysDev.SQLite {
 		public class SqlUpdItem {
 			[XmlAttribute] public string? Name { get; set; }
 			[XmlAttribute] public int Version { get; set; }
-			public string? Query { get; set; }
+			[XmlElement] public List<string>? Query { get; set; }
 		}
 		public class SqlUpdExec : List<SqlUpdStatus> {
 			public bool Error { get; set; }
