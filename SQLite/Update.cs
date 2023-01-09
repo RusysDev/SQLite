@@ -16,11 +16,12 @@ namespace RusysDev.SQLite {
 
 		public List<SqlUpdItem> Updates { get; set; } = new();
 		public CfgItem Version { get; private set; }
+		public bool IsNew { get; set; }
 		public string Config { get; } = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) ?? "", "SqlUpdate.xml");
-		
+
 		public SqlUpdate() {
 			//Check if Config table exists in database and create it
-			if (!Sql.GetTables().Contains("Config")) { new Sql(Sql_Create).Execute(); }
+			if (!Sql.GetTables().Contains("Config")) { new Sql(Sql_Create).Execute(); IsNew = true; }
 
 			//Get version from configuration table
 			var vers = new Sql("SELECT * FROM [Config] WHERE [cfg_key]='System' and [cfg_name]='Version';").GetItem<CfgItem>();
@@ -45,9 +46,9 @@ namespace RusysDev.SQLite {
 				if (Updates.Count == 0) File.Delete(Config);
 			}
 		}
-		
+
 		/// <summary>Execute and print out database updates</summary>
-		public void ProcessUpdates(bool print=true) {
+		public void ProcessUpdates(bool print = true) {
 			if (Updates.Count > 0) {
 				if (print) Console.WriteLine($"Updating database.\nCurrent: v{Version.Number} - {Version.Name}");
 				var sts = Execute();
@@ -64,7 +65,7 @@ namespace RusysDev.SQLite {
 			var tmr = System.Diagnostics.Stopwatch.StartNew();
 			var ret = new SqlUpdExec(); int vers = (int)Version.Number;
 			try {
-				Sql.Backup($"update.v{Version.Number}");
+				if (!IsNew) Sql.Backup($"update.v{Version.Number}");
 				var inc = 1;
 				foreach (var i in Updates) {
 					if (i.Query?.Count > 0) {
