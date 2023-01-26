@@ -145,6 +145,19 @@ namespace RusysDev.SQLite {
 		public List<T> GetList<T>(string field) => Read((rdr, ret) => ret.Add(rdr.GetFieldValue<T>(field)), new List<T>());
 
 
+		/// <summary>Get single item from database</summary>
+		/// <typeparam name="T">Type of object</typeparam>
+		/// <param name="field">Field name</param>
+		/// <returns>Value</returns>
+		public T GetValue<T>(string field) where T : new() => Read((rdr, ret) => { ret = rdr.GetFieldValue<T>(field); return false; }, new T());
+		/// <summary>Get single item from database</summary>
+		/// <typeparam name="T">Type of object</typeparam>
+		/// <param name="field">Field ID</param>
+		/// <returns>Value</returns>
+		public T GetValue<T>(int field = 0) where T : new() => Read((rdr, ret) => { ret = rdr.GetFieldValue<T>(field); return false; }, new T());
+
+
+
 		/// <summary>Get list of items from database json column</summary>
 		/// <typeparam name="T">Type of object</typeparam>
 		/// <param name="field">Field ID</param>
@@ -202,6 +215,18 @@ namespace RusysDev.SQLite {
 			using var cmd = Cmd(conn);
 			using var rdr = cmd.ExecuteReader();
 			while (rdr.Read()) func(rdr, obj);
+			return obj;
+		}
+
+		/// <summary>Execute reader and loop trough records</summary>
+		/// <typeparam name="T">Object type</typeparam>
+		/// <param name="func">Function for loop</param>
+		/// <param name="obj">Object to pass between loops</param>
+		public T Read<T>(Func<SqliteDataReader, T, bool> func, T obj) {
+			using var conn = Conn();
+			using var cmd = Cmd(conn);
+			using var rdr = cmd.ExecuteReader();
+			while (rdr.Read()) if (!func(rdr, obj)) break;
 			return obj;
 		}
 
