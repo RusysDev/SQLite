@@ -1,11 +1,11 @@
-﻿using System.Reflection;
-using System.Text.Json;
-
-// -----------------------------------------
+﻿// -----------------------------------------
 //             SQLite Properties
 // -----------------------------------------
 //  Properties and attributes for main code
 // -----------------------------------------
+
+using System.Reflection;
+using System.Text.Json;
 
 namespace RusysDev.SQLite {
 	/// <summary>Sql parameter collection</summary>

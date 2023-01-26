@@ -1,10 +1,10 @@
-﻿using System.Xml.Serialization;
-
-// ------------------------------------------------
+﻿// ------------------------------------------------
 //        SQLite Database version update
 // ------------------------------------------------
 //  Class for updating database from SqlUpdate.xml
 // ------------------------------------------------
+
+using System.Xml.Serialization;
 
 namespace RusysDev.SQLite {
 	using Updates;

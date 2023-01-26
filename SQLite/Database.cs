@@ -1,17 +1,15 @@
-﻿using Microsoft.Data.Sqlite;
-using System.Text.Json;
-
-// ------------------------------------------------
+﻿// ------------------------------------------------
 //          SQLite Database SDK main class
 // ------------------------------------------------
 //  Class for updating database from SqlUpdate.xml
 // ------------------------------------------------
 
+using Microsoft.Data.Sqlite;
+using System.Text.Json;
+using System.Data;
+
 namespace RusysDev.SQLite {
 	using Config;
-	using System.Data;
-	using System.Reflection.PortableExecutable;
-	using System.Runtime.CompilerServices;
 
 	public class Sql {
 		public static readonly bool Check = true;
