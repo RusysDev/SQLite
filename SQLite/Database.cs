@@ -9,6 +9,9 @@ using System.Text.Json;
 
 namespace RusysDev.SQLite {
 	using Config;
+	using System.Data;
+	using System.Reflection.PortableExecutable;
+	using System.Runtime.CompilerServices;
 
 	public class Sql {
 		public static readonly bool Check = true;
@@ -48,7 +51,7 @@ namespace RusysDev.SQLite {
 		/// <summary>Sql Query timeout in seconds</summary>
 		public int Timeout { get; set; } = 10;
 		private SqliteTransaction? Tran { get; set; }
-		private SqliteConnection Conn() { var conn = new SqliteConnection(DbConnStr); conn.Open(); return conn; }
+		private static SqliteConnection Conn() { var conn = new SqliteConnection(DbConnStr); conn.Open(); return conn; }
 		private SqliteCommand Cmd(SqliteConnection conn) {
 			var cmd = new SqliteCommand(Query, conn, Tran) { CommandTimeout = Timeout > 0 ? Timeout : 10 };
 			cmd.Parameters.Add(new("$now", DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")));
@@ -77,13 +80,8 @@ namespace RusysDev.SQLite {
 		/// <typeparam name="T">Class type for items</typeparam>
 		/// <returns>List of T objects</returns>
 		public List<T> GetData<T>() where T : new() {
-			var ret = new List<T>();
 			var pr = SqlProps.Get<T>();
-			using var conn = Conn();
-			using var cmd = Cmd(conn);
-			using var rdr = cmd.ExecuteReader();
-			while (rdr.Read()) ret.Add(pr.Fill<T>(rdr));
-			return ret;
+			return Read((rdr, ret) => ret.Add(pr.Fill<T>(rdr)), new List<T>());
 		}
 
 		/// <summary>Get single row from database formatted as selected class</summary>
@@ -97,18 +95,28 @@ namespace RusysDev.SQLite {
 			return rdr.Read() ? pr.Fill<T>(rdr) : default;
 		}
 
+		/// <summary>Execute Non Query</summary>
+		/// <returns>Record count</returns>
 		public int Execute() {
 			using var conn = Conn();
 			using var cmd = Cmd(conn);
 			return cmd.ExecuteNonQuery();
 		}
 
+		/// <summary>Execute Non Query passing object as query parameters</summary>
+		/// <typeparam name="T">Object type</typeparam>
+		/// <param name="obj">Object to pass to parameters</param>
+		/// <returns>Record count</returns>
 		public int Execute<T>(T obj) {
 			var pr = SqlProps.Get<T>();
 			foreach (var i in pr) { Params.Add((i.Key, i.GetValue(obj))); }
 			return Execute();
 		}
 
+		/// <summary>Execute Non Query for each object in list</summary>
+		/// <typeparam name="T">Object type</typeparam>
+		/// <param name="obj">List of objects</param>
+		/// <returns>Record count</returns>
 		public int Execute<T>(List<T> obj) {
 			int ret = 0; var pr = SqlProps.Get<T>();
 			foreach (var i in pr) { Params.Add((i.Key, null)); }
@@ -126,29 +134,78 @@ namespace RusysDev.SQLite {
 			return ret;
 		}
 
-		public List<T> GetList<T>(int field = 0) {
-			var ret = new List<T>();
+		/// <summary>Get list of single field objects from database</summary>
+		/// <typeparam name="T">Type of object</typeparam>
+		/// <param name="field">Field ID</param>
+		/// <returns>List of objects</returns>
+		public List<T> GetList<T>(int field = 0) => Read((rdr, ret) => ret.Add(rdr.GetFieldValue<T>(field)), new List<T>());
+
+		/// <summary>Get list of single field objects from database</summary>
+		/// <typeparam name="T">Type of object</typeparam>
+		/// <param name="field">Field name</param>
+		/// <returns>List of objects</returns>
+		public List<T> GetList<T>(string field) => Read((rdr, ret) => ret.Add(rdr.GetFieldValue<T>(field)), new List<T>());
+
+
+		/// <summary>Get list of items from database json column</summary>
+		/// <typeparam name="T">Type of object</typeparam>
+		/// <param name="field">Field ID</param>
+		/// <returns>List of objects</returns>
+		public List<T> GetListJson<T>(int field = 0) => Read((rdr, ret) => {
+			try {
+				var obj = JsonSerializer.Deserialize<T>(rdr.GetString(field));
+				if (obj is not null) ret.Add(obj);
+			} catch (Exception) { }
+		}, new List<T>());
+
+
+		/// <summary>Get dictionary of items</summary>
+		/// <typeparam name="T">Type of object</typeparam>
+		/// <param name="field">Field ID</param>
+		/// <returns>Dictionary of objects</returns>
+		public Dictionary<string, T> GetDict<T>(int field = 0) where T : new() {
+			var pr = SqlProps.Get<T>();
+			return Read((rdr, ret) => {
+				var fld = rdr.GetString(field);
+				if (fld is not null) ret[fld] = pr.Fill<T>(rdr);
+			}, new Dictionary<string, T>());
+		}
+
+		/// <summary>Get dictionary of items</summary>
+		/// <typeparam name="T">Type of object</typeparam>
+		/// <param name="field">Field name</param>
+		/// <returns>Dictionary of objects</returns>
+		public Dictionary<string, T> GetDict<T>(string field) where T : new() {
+			var pr = SqlProps.Get<T>();
+			return Read((rdr,ret) => {
+				var fld = rdr.GetString(field);
+				if (fld is not null) ret[fld] = pr.Fill<T>(rdr);
+			}, new Dictionary<string, T>());
+		}
+
+
+
+
+		/// <summary>Execute reader and loop trough records</summary>
+		/// <param name="func">Function for loop</param>
+		public void Read(Action<SqliteDataReader> func) {
 			using var conn = Conn();
 			using var cmd = Cmd(conn);
 			using var rdr = cmd.ExecuteReader();
-			while (rdr.Read()) ret.Add(rdr.GetFieldValue<T>(field));
-			return ret;
+			while (rdr.Read()) func(rdr);
 		}
 
-		public List<T> GetListJson<T>(int field = 0) {
-			var ret = new List<T>();
+		/// <summary>Execute reader and loop trough records</summary>
+		/// <typeparam name="T">Object type</typeparam>
+		/// <param name="func">Function for loop</param>
+		/// <param name="obj">Object to pass between loops</param>
+		public T Read<T>(Action<SqliteDataReader, T> func, T obj) {
 			using var conn = Conn();
 			using var cmd = Cmd(conn);
 			using var rdr = cmd.ExecuteReader();
-			while (rdr.Read()) {
-				try {
-					var obj = JsonSerializer.Deserialize<T>(rdr.GetString(field));
-					if (obj is not null) ret.Add(obj);
-				} catch (Exception) { }
-			}
-			return ret;
+			while (rdr.Read()) func(rdr, obj);
+			return obj;
 		}
-
 
 		private static Dictionary<string, SqliteParameter> GetParams(SqliteCommand cmd) {
 			var ret = new Dictionary<string, SqliteParameter>();

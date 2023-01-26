@@ -4,6 +4,8 @@
 //  This code is used to simplify general SQLite classes
 // ------------------------------------------------------
 
+using Microsoft.Data.Sqlite;
+
 namespace RusysDev.SQLite {
 	public static class Extensions {
 		public static bool IsList(this object o) {
@@ -27,6 +29,12 @@ namespace RusysDev.SQLite {
 		public static TValue GetOrCreate<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key) where TValue : new() {
 			if (!dict.TryGetValue(key, out var val)) { val = new TValue(); dict.Add(key, val); }
 			return val;
+		}
+
+		public static string[] GetFields(this SqliteDataReader rdr) {
+			var ret = new List<string>();
+			for (int i = 0, j = rdr.FieldCount; i < j; i++) ret.Add(rdr.GetName(i));
+			return ret.ToArray();
 		}
 	}
 }
