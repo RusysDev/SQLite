@@ -40,10 +40,7 @@ namespace RusysDev.SQLite {
 				Prop.SetValue(obj, jsn);
 			} catch (Exception) { }
 		}
-		private void SetTry(object obj, object? val) { try { Prop.SetValue(obj, val?.ChangeType(Prop.PropertyType)); } catch (Exception) { 
-				
-				SetJson(obj, val);
-			} }
+		private void SetTry(object obj, object? val) { try { Prop.SetValue(obj, val?.ChangeType(Prop.PropertyType)); } catch (Exception) { SetJson(obj, val); } }
 
 		/// <summary>Property ID</summary>
 		public int ID { get; set; }
@@ -60,7 +57,11 @@ namespace RusysDev.SQLite {
 		/// <summary>Get property value for storing it to Database</summary>
 		/// <param name="obj">Object value</param>
 		/// <returns>Value of object for storing to Datbase</returns>
-		public object? GetValue(object? obj) { var val = Prop.GetValue(obj); return Json && val is not null ? JsonSerializer.Serialize(val) : val; }
+		public object? GetValue(object? obj) {
+			var val = Prop.GetValue(obj);
+			if (val is DateTime dt) { val = dt.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"); }
+			return Json && val is not null ? JsonSerializer.Serialize(val) : val;
+		}
 
 		public SqlProp(SqlField fld, PropertyInfo prop) {
 			Name = fld.Name ?? prop.Name; ID = fld.ID; Prop = prop;
