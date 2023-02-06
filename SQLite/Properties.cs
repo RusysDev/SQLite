@@ -23,10 +23,11 @@ namespace RusysDev.SQLite {
 
 	/// <summary>Sql query property item</summary>
 	public class SqlProp {
-		public static HashSet<Type> Types = new() { typeof(int), typeof(long), typeof(bool), typeof(DateTime) };
+		public static HashSet<Type> Types = new() { typeof(int), typeof(long), typeof(bool) };
 
 		private void SetString(object obj, object? val) => Prop.SetValue(obj, val?.EmptyToNull());
 		private void SetData(object obj, object? val) => Prop.SetValue(obj, Convert.ChangeType(val, Prop.PropertyType));
+		private void SetDate(object obj, object? val) { if (DateTime.TryParse(val?.ToString(), out var dt)) Prop.SetValue(obj, dt.ToUniversalTime()); }
 		private void SetEnum(object obj, object? val) => Prop.SetValue(obj, Enum.Parse(Prop.PropertyType, val?.ToString() ?? ""));
 		private void SetJson(object obj, object? val) {
 			try {
@@ -69,6 +70,7 @@ namespace RusysDev.SQLite {
 			Json = prop.GetCustomAttribute(typeof(SqlJson)) is not null;
 			if (tp == typeof(string)) { SetValue = SetString; }
 			else if (Types.Contains(tp)) { SetValue = SetData; }
+			else if (tp == typeof(DateTime)) { SetValue = SetDate; }
 			else if (tp.IsEnum) { SetValue = SetEnum; }
 			else if (tp.IsList() || tp.IsDictionary()) { SetValue = SetJson; }
 			else if (Json) { SetValue = SetJson; }
