@@ -94,7 +94,10 @@ namespace RusysDev.SQLite {
 		public static T Fill<T>(this List<SqlProp> lst, Microsoft.Data.Sqlite.SqliteDataReader rdr) where T : new() {
 			var ret = new T();
 			foreach (var i in lst) {
-				try { i.SetValue(ret, i.ID > 0 ? rdr[i.ID] : rdr[i.Name]); } catch (Exception) { }
+				try {
+					var dt = i.ID > 0 ? rdr[i.ID] : rdr[i.Name];
+					i.SetValue(ret, dt);
+				} catch (Exception) { }
 			}
 			return ret;
 		}
