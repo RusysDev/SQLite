@@ -144,19 +144,17 @@ namespace RusysDev.SQLite {
 		/// <returns>List of objects</returns>
 		public List<T> GetList<T>(string field) => Read((rdr, ret) => ret.Add(rdr.GetFieldValue<T>(field)), new List<T>());
 
-
 		/// <summary>Get single item from database</summary>
 		/// <typeparam name="T">Type of object</typeparam>
 		/// <param name="field">Field name</param>
 		/// <returns>Value</returns>
 		public T GetValue<T>(string field) where T : new() => Read((rdr, ret) => { ret = rdr.GetFieldValue<T>(field); return false; }, new T());
+
 		/// <summary>Get single item from database</summary>
 		/// <typeparam name="T">Type of object</typeparam>
 		/// <param name="field">Field ID</param>
 		/// <returns>Value</returns>
 		public T GetValue<T>(int field = 0) where T : new() => Read((rdr, ret) => { ret = rdr.GetFieldValue<T>(field); return false; }, new T());
-
-
 
 		/// <summary>Get list of items from database json column</summary>
 		/// <typeparam name="T">Type of object</typeparam>
@@ -193,9 +191,6 @@ namespace RusysDev.SQLite {
 				if (fld is not null) ret[fld] = pr.Fill<T>(rdr);
 			}, new Dictionary<string, T>());
 		}
-
-
-
 
 		/// <summary>Execute reader and loop trough records</summary>
 		/// <param name="func">Function for loop</param>

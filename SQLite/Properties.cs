@@ -5,6 +5,7 @@
 // -----------------------------------------
 
 using System.Reflection;
+using System.Reflection.PortableExecutable;
 using System.Text.Json;
 
 namespace RusysDev.SQLite {
@@ -92,7 +93,9 @@ namespace RusysDev.SQLite {
 		}
 		public static T Fill<T>(this List<SqlProp> lst, Microsoft.Data.Sqlite.SqliteDataReader rdr) where T : new() {
 			var ret = new T();
-			foreach (var i in lst) { i.SetValue(ret, i.ID > 0 ? rdr[i.ID] : rdr[i.Name]); }
+			foreach (var i in lst) {
+				try { i.SetValue(ret, i.ID > 0 ? rdr[i.ID] : rdr[i.Name]); } catch (Exception) { }
+			}
 			return ret;
 		}
 	}
