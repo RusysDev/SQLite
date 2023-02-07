@@ -148,13 +148,13 @@ namespace RusysDev.SQLite {
 		/// <typeparam name="T">Type of object</typeparam>
 		/// <param name="field">Field name</param>
 		/// <returns>Value</returns>
-		public T GetValue<T>(string field) where T : new() => Read((rdr, ret) => { ret = rdr.GetFieldValue<T>(field); return false; }, new T());
+		public T GetValue<T>(string field) where T : new() { T ret = new T(); Read((rdr, b) => { ret = rdr.GetFieldValue<T>(field); return false; }, ret); return ret; }
 
 		/// <summary>Get single item from database</summary>
 		/// <typeparam name="T">Type of object</typeparam>
 		/// <param name="field">Field ID</param>
 		/// <returns>Value</returns>
-		public T GetValue<T>(int field = 0) where T : new() => Read((rdr, ret) => { ret = rdr.GetFieldValue<T>(field); return false; }, new T());
+		public T GetValue<T>(int field = 0) where T : new() { T ret = new T(); Read((rdr, b) => { ret = rdr.GetFieldValue<T>(field); return false; }, ret); return ret; }
 
 		/// <summary>Get list of items from database json column</summary>
 		/// <typeparam name="T">Type of object</typeparam>
