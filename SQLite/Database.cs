@@ -255,7 +255,6 @@ namespace RusysDev.SQLite {
 
 
 		private static JsonSerializerOptions JsOpt = new() {
-			WriteIndented = true,
 			Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
 		};
 		private void Print() {
