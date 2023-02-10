@@ -74,7 +74,7 @@ namespace RusysDev.SQLite {
 			var cnt = rdr.FieldCount;
 			if (includeFields) {
 				var obj = new object[cnt];
-				for (int i = 0; i < rdr.FieldCount; i++) obj[i]=rdr.GetName(i);
+				for (int i = 0; i < rdr.FieldCount; i++) obj[i] = rdr.GetName(i);
 				ret.Add(obj);
 			}
 			while (rdr.Read()) { var obj = new object[cnt]; rdr.GetValues(obj); ret.Add(obj); }
@@ -208,7 +208,7 @@ namespace RusysDev.SQLite {
 		/// <returns>Dictionary of objects</returns>
 		public Dictionary<string, T> GetDict<T>(string field) where T : new() {
 			var pr = SqlProps.Get<T>();
-			return Read((rdr,ret) => {
+			return Read((rdr, ret) => {
 				var fld = rdr.GetString(field);
 				if (fld is not null) ret[fld] = pr.Fill<T>(rdr);
 			}, new Dictionary<string, T>());
@@ -253,11 +253,14 @@ namespace RusysDev.SQLite {
 			return ret;
 		}
 
+
+		private static JsonSerializerOptions JsOpt = new() {
+			WriteIndented = true,
+			Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+		};
 		private void Print() {
-			System.Diagnostics.Debug.WriteLine(Query + (Params.Count > 0 ? " \n" + JsonSerializer.Serialize(Params.Values) : ""), "SQL");
+			System.Diagnostics.Debug.WriteLine(Query + (Params.Count > 0 ? " \n\t\t\t" + JsonSerializer.Serialize(Params.Values, JsOpt) : ""), "SQL");
 		}
-
 	}
-
 }
 
