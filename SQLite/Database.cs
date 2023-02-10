@@ -10,6 +10,8 @@ using System.Data;
 
 namespace RusysDev.SQLite {
 	using Config;
+	using System.Net.Http.Headers;
+	using System.Reflection.PortableExecutable;
 
 	public class Sql {
 		public static readonly bool Check = true;
@@ -64,12 +66,17 @@ namespace RusysDev.SQLite {
 		public Sql(string sql, SqlParams param) { Query = sql; Params = param; }
 
 
-		public List<object[]> GetArray() {
+		public List<object[]> GetArray(bool includeFields = false) {
 			using var conn = Conn();
 			using var cmd = Cmd(conn);
 			using var rdr = cmd.ExecuteReader();
 			var ret = new List<object[]>();
 			var cnt = rdr.FieldCount;
+			if (includeFields) {
+				var obj = new object[cnt];
+				for (int i = 0; i < rdr.FieldCount; i++) obj[i]=rdr.GetName(i);
+				ret.Add(obj);
+			}
 			while (rdr.Read()) { var obj = new object[cnt]; rdr.GetValues(obj); ret.Add(obj); }
 			return ret;
 		}
@@ -80,6 +87,21 @@ namespace RusysDev.SQLite {
 		public List<T> GetData<T>() where T : new() {
 			var pr = SqlProps.Get<T>();
 			return Read((rdr, ret) => ret.Add(pr.Fill<T>(rdr)), new List<T>());
+		}
+
+		public List<Dictionary<string, object?>> GetData() {
+			var ret = new List<Dictionary<string, object?>>();
+			var nml = new List<string>(); var nmok = false;
+			Read((rdr) => {
+				if (!nmok) {
+					if (rdr.HasRows) for (int i = 0; i < rdr.FieldCount; i++) nml.Add(rdr.GetName(i));
+					nmok = true;
+				}
+				var dic = new Dictionary<string, object?>();
+				foreach (var i in nml) dic[i] = rdr.GetValue(i);
+				ret.Add(dic);
+			});
+			return ret;
 		}
 
 		/// <summary>Get single row from database formatted as selected class</summary>
